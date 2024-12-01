@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: SportifyPortal
+  datasource:
+    password: 123456
+    url: jdbc:mysql://localhost:3306/thebagsdb
+    username: Shop
+  jpa:
+     hibernate:
+       ddl-auto: update
+  mail:
+    host: smtp.gmail.com
+    password: hftrdolkcibguwrv
+    username: nqht123456789@gmail.com
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    
+server:
+   port: 8081
+
+app:
+  jwtSecret: asdfghjklpoiuytrewqzxcvbnmqazwsxedcrfvtgbyh
+  jwtExpirationMs: 86400000
