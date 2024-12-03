@@ -1,32 +1,45 @@
 package com.sportify.service.entities;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 
-import com.sportify.service.enums.Gender;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Entity
 public class UserProfile extends AbstractEntity{
 	private static final long serialVersionUID = 469702593221707920L;
 	
-	private String firstName;
-	
-	private String lastName;
-	
-	private String email;
-	
-	private LocalDateTime birthday;
-	
-	private String phone;
-	
-	private String avatar;
-	
-	private String bio;
-	
+
+    @Column(name = "firstname")
+    private String firstname;
+
+    @Column(name = "lastname")
+    private String lastname;
+
+    @Column(name = "email")
+    private String email;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "birthday")
+    private Date birthday;
+
+    @Column(name = "phone")
+    private long phone;
+
+    @Column(name = "avatar")
+    private String avatar;
+
+    @Column(name = "bio")
+    private String bio;
+
+    @ManyToOne(fetch = FetchType.EAGER)
 	private Gender gender;
 	
 	@OneToOne
