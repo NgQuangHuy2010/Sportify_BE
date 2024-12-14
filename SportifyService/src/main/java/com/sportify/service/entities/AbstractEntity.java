@@ -8,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Version;
 import lombok.Data;
 
@@ -26,4 +28,15 @@ public abstract class AbstractEntity implements Serializable {
     protected LocalDateTime createdOn;
     @Column(name = "updated_on")
     protected LocalDateTime updatedOn;
+    
+    @PrePersist
+    protected void onCreate() {
+        this.createdOn = LocalDateTime.now();
+        this.updatedOn = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedOn = LocalDateTime.now();
+    }
 }

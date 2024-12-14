@@ -2,19 +2,23 @@ package com.sportify.service.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 @Entity
 @Table(name = "connect_settings")
 public class ConnectSetting extends AbstractEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private int id;
+	private static final long serialVersionUID = 979959609007334257L;
 
 	@Column(name = "week_day")
 	private String weekDay;
@@ -36,6 +40,11 @@ public class ConnectSetting extends AbstractEntity {
 
 	@Column(name = "status")
 	private int status;
+	
+	//Relationship:
+    @OneToOne()
+	@JoinColumn(name = "user_id")
+	private UserProfile userProfile;
 
 
 }
