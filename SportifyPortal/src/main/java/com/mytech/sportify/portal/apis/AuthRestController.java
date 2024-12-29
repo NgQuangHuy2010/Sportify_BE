@@ -20,9 +20,7 @@ import com.mytech.sportify.apis.response.MessageResponse;
 import com.mytech.sportify.portal.dtos.LoginDTO;
 import com.mytech.sportify.portal.security.AppUserDetails;
 import com.mytech.sportify.portal.security.jwt.JwtUtils;
-import com.mytech.thebags.service.dtos.UserDTO;
-import com.mytech.thebags.service.entities.User;
-import com.mytech.thebags.service.services.UserService;
+import com.sportify.service.UserService;
 
 import jakarta.validation.Valid;
 
@@ -38,35 +36,16 @@ public class AuthRestController {
 	JwtUtils jwtUtils;
 
 	@PostMapping("/signup")
-	public ResponseEntity<MessageResponse> autheticateUser(@Valid @RequestBody UserDTO userDto) {
-		User dbUser = userService.getByEmail(userDto.getEmail());
-		if (dbUser != null) {
-			return ResponseEntity.ok(new MessageResponse("Error", "Email da ton tai"));
+	public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody UserDTO userDto) {
+		if (userService.isEmailExisted(userDTO.getEmail())) {
+			return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
 		}
-		User saveUser = userService.save(userDto);
-		if (saveUser == null) {
-			return ResponseEntity.ok(new MessageResponse("Error", "co loi xay ra, khong the dang ky"));
-		}
-		return ResponseEntity.ok(new MessageResponse("Success", "User registered"));
+
+		UserAcount user = UserMapper.MAPPER.userDTOToUser(userDTO);
+		userService.save(user);
+
+		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
 
-	@PostMapping("/signin")
-	public ResponseEntity<JWTResponse> autheticateUser(@Valid @RequestBody LoginDTO loginDTO) {
-		User dbUser = userService.getByEmail(loginDTO.getEmail());
-		if (dbUser == null) {
-			return ResponseEntity.ok(new JWTResponse(null, null, null, null, "bad crendetial"));
-		}
-		Authentication authentication = authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-//		AppUserDetails appUserDetails = (AppUserDetails) authentication.getAuthorities().stream().map(item -> item.getAuthority());
-		AppUserDetails appUserDetails = (AppUserDetails) authentication.getPrincipal();
-		List<String> role = appUserDetails.getAuthorities().stream().map(item -> item.getAuthority())
-				.collect(Collectors.toList());
-
-		String jwt = jwtUtils.generateJwtToken(authentication);
-
-		return ResponseEntity.ok(new JWTResponse(jwt, dbUser.getFullName(), dbUser.getEmail(), role, "success"));
-	}
 
 }
