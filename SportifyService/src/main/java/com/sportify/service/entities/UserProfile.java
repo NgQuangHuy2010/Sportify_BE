@@ -1,12 +1,18 @@
 package com.sportify.service.entities;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.sportify.service.enums.Gender;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -54,8 +60,8 @@ public class UserProfile extends AbstractEntity {
 
 	// Relationship:
 
-	@ManyToOne()
-	@JoinColumn(name = "gender_id")
+	@Enumerated(EnumType.STRING) 
+	@Column(name = "gender", nullable = false)
 	private Gender gender;
 
 	@OneToOne(mappedBy = "userProfile")
@@ -78,6 +84,6 @@ public class UserProfile extends AbstractEntity {
 
 	@ManyToMany
 	@JoinTable(name = "users_sports", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "sport_id"))
-	private Set<Sport> sports = new HashSet<>();
+	private List<Sport> sports = new ArrayList<>();
 
 }
