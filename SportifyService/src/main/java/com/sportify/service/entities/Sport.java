@@ -3,8 +3,7 @@ package com.sportify.service.entities;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.sportify.service.enums.FeedbackStatus;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
@@ -23,6 +22,7 @@ public class Sport extends AbstractEntity {
 
 	private static final long serialVersionUID = 5216464673846909313L;
 
+	@Column(name = "sport_name", nullable = false)
 	private String sportName;
 	
 	private String image;

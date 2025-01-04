@@ -1,4 +1,4 @@
-package com.sportify.service;
+package com.sportify.service.services;
 
 import java.util.Optional;
 
