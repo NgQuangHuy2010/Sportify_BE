@@ -58,6 +58,9 @@ public class UserProfile extends AbstractEntity {
 	@Column(name = "bio")
 	private String bio;
 
+	@Column(name = "is_locked")
+	private Boolean isLocked = false;
+
 	// Relationship:
 
 	@Enumerated(EnumType.STRING) 
@@ -85,5 +88,8 @@ public class UserProfile extends AbstractEntity {
 	@ManyToMany
 	@JoinTable(name = "users_sports", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "sport_id"))
 	private List<Sport> sports = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Booking> bookings = new ArrayList<>();
 
 }

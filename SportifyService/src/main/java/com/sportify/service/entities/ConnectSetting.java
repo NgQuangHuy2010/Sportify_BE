@@ -24,22 +24,22 @@ public class ConnectSetting extends AbstractEntity {
 	private String weekDay;
 
 	@Column(name = "from_time")
-	private int fromTime;
+	private Integer fromTime;
 
 	@Column(name = "to_time")
-	private int toTime;
+	private Integer toTime;
 
 	@Column(name = "age_max")
-	private int ageMax;
+	private Integer ageMax;
 
 	@Column(name = "age_min")
-	private int ageMin;
+	private Integer ageMin;
 
 	@Column(name = "gender_find")
 	private String genderFind;
 
 	@Column(name = "status")
-	private int status;
+	private Integer status;
 	
 	//Relationship:
     @OneToOne()
