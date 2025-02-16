@@ -64,7 +64,7 @@ public class UserProfile extends AbstractEntity {
 	// Relationship:
 
 	@Enumerated(EnumType.STRING) 
-	@Column(name = "gender", nullable = false)
+	@Column(name = "gender", nullable = true)
 	private Gender gender;
 
 	@OneToOne(mappedBy = "userProfile")

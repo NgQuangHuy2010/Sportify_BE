@@ -11,4 +11,6 @@ import com.sportify.service.entities.UserAccount;
 public interface UserAccountRepository extends JpaRepository<UserAccount, Long>{
 	Optional<UserAccount> findByUsername(String username);
     Boolean existsByUsername(String username);
+    Optional<UserAccount> findByEmail(String email);
+    Boolean existsByEmail(String email);
 }
