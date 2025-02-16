@@ -15,27 +15,28 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "user_accounts")
 public class UserAccount extends AbstractEntity {
 
 	private static final long serialVersionUID = -7382915357775510423L;
 
-    @Column(name = "username")
-    private String username;
+	@Column(name = "username")
+	private String username;
+	@Column(name = "email")
+	private String email;
+	@Column(name = "password")
+	private String password;
 
-    @Column(name = "password")
-    private String password;
+	@Column(name = "last_login")
+	private LocalDateTime lastLogin;
 
-    @Column(name = "last_login")
-    private LocalDateTime lastLogin;
+	@Column(name = "registration_method")
+	private String registrationMethod;
 
-    @Column(name = "registration_method")
-    private String registrationMethod;
-    
-    //Relationship:
-    @OneToOne()
+	// Relationship:
+	@OneToOne()
 	@JoinColumn(name = "user_id")
 	private UserProfile userProfile;
 }

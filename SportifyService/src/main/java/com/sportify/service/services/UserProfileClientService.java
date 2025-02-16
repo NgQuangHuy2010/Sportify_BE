@@ -14,9 +14,11 @@ import com.sportify.service.dtos.UserProfileRequest;
 import com.sportify.service.entities.Address;
 import com.sportify.service.entities.Gender;
 import com.sportify.service.entities.Sport;
+import com.sportify.service.entities.UserAccount;
 import com.sportify.service.entities.UserProfile;
 import com.sportify.service.repositories.AddressClientRepository;
 import com.sportify.service.repositories.SportClientRepository;
+import com.sportify.service.repositories.UserAccountRepository;
 import com.sportify.service.repositories.UserProfileRepository;
 
 
@@ -33,13 +35,23 @@ public class UserProfileClientService {
 
     @Autowired
     private AddressClientRepository addressClientRepository;
-    
+    @Autowired
+    private UserAccountRepository userAccountRepository;
+    @Autowired
+    private UserAccountService userAccountService;
     @Transactional
     public void saveUserProfileWithSports(UserProfileRequest userProfileRequest) {
+    	  UserAccount userAccount = userAccountService.registerUser(
+    	            userProfileRequest.getEmail(), 
+    	            userProfileRequest.getPassword()
+    	        );
 
         UserProfile userProfile = mapToUserProfile(userProfileRequest);
+        userProfile.setUserAccount(userAccount);
         UserProfile savedUserProfile = userProfileRepository.save(userProfile);
-
+        userAccount.setUserProfile(savedUserProfile); 
+        userAccountRepository.save(userAccount);
+        
         if (userProfileRequest.getSports() != null && !userProfileRequest.getSports().isEmpty()) {
             List<Sport> sports = findValidSports(userProfileRequest.getSports());
             savedUserProfile.setSports(new ArrayList<>(sports));
