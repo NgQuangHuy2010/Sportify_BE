@@ -22,9 +22,9 @@ import com.sportify.service.entities.UserProfile;
 @Component
 public class AdminMapper {
 	// SPORT:
-	public SportList SportToSportList(Sport sport) {
-		return new SportList(sport.getId(), sport.getSportName(), sport.getImage());
-	}
+//	public SportList SportToSportList(Sport sport) {
+//		return new SportList(sport.getId(), sport.getSportName(), sport.getImage());
+//	}
 
 	public SportDetail SportToSportDetail(Sport sport, Long userCount) {
 		return new SportDetail(sport.getId(), sport.getSportName(), sport.getImage(), userCount, sport.getCreatedOn());
