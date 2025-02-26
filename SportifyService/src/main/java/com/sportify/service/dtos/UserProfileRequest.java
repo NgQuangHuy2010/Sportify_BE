@@ -3,9 +3,13 @@ package com.sportify.service.dtos;
 import java.sql.Date;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sportify.service.entities.Address;
 import com.sportify.service.enums.Gender;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserProfileRequest {
 	private String firstname;
 	private String lastname;
@@ -13,7 +17,7 @@ public class UserProfileRequest {
 	private String password;
 	private Date birthday;
 	private String phone;
-	private String avatar;
+    private MultipartFile avatar;
 	private String bio;
 	private Gender gender;
 	private List<Long> sports;
@@ -75,11 +79,13 @@ public class UserProfileRequest {
 		this.phone = phone;
 	}
 
-	public String getAvatar() {
+
+
+	public MultipartFile getAvatar() {
 		return avatar;
 	}
 
-	public void setAvatar(String avatar) {
+	public void setAvatar(MultipartFile avatar) {
 		this.avatar = avatar;
 	}
 

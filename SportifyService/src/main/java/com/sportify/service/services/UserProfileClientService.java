@@ -49,7 +49,7 @@ public class UserProfileClientService {
     @Autowired
     private UserAccountService userAccountService;
     @Transactional
-    public void saveUserProfileWithSports(UserProfileRequest userProfileRequest) {
+    public void saveUserProfileWithSports(UserProfileRequest userProfileRequest, MultipartFile avatar) throws IOException {
     	  UserAccount userAccount = userAccountService.registerUser(
     	            userProfileRequest.getEmail(), 
     	            userProfileRequest.getPassword()
@@ -57,6 +57,10 @@ public class UserProfileClientService {
     	  
         UserProfile userProfile = mapToUserProfile(userProfileRequest);
         userProfile.setUserAccount(userAccount);
+        if (avatar != null && !avatar.isEmpty()) {
+            String avatarFileName = saveImage(avatar);
+            userProfile.setAvatar(avatarFileName);
+        }
         UserProfile savedUserProfile = userProfileRepository.save(userProfile);
         userAccount.setUserProfile(savedUserProfile); 
         userAccountRepository.save(userAccount);
@@ -82,7 +86,6 @@ public class UserProfileClientService {
         userProfile.setEmail(userProfileRequest.getEmail());
         userProfile.setBirthday(userProfileRequest.getBirthday());
         userProfile.setPhone(userProfileRequest.getPhone());
-        userProfile.setAvatar(userProfileRequest.getAvatar());
         userProfile.setBio(userProfileRequest.getBio());
         userProfile.setGender(userProfileRequest.getGender());
         userProfile.setRole(Role.USER);

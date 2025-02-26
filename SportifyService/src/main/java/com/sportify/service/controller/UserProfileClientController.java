@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sportify.service.dtos.UserProfileRequest;
 import com.sportify.service.security.JwtService;
 import com.sportify.service.security.dtos.AuthResponse;
@@ -24,10 +27,13 @@ public class UserProfileClientController {
     @Autowired
     private JwtService jwtService;
 	@PostMapping("/save")
-	public ResponseEntity<String> saveUserProfile(@RequestBody UserProfileRequest userProfileRequest) {
+	public ResponseEntity<String> saveUserProfile(@RequestPart(name = "userProfileRequest", required = true) String userProfileJson,
+	        @RequestPart(value = "avatar", required = false) MultipartFile avatar) {
 
 		try {
-			userProfileClientService.saveUserProfileWithSports(userProfileRequest);
+	        ObjectMapper objectMapper = new ObjectMapper();
+	        UserProfileRequest userProfileRequest = objectMapper.readValue(userProfileJson, UserProfileRequest.class);
+			userProfileClientService.saveUserProfileWithSports(userProfileRequest, avatar);
 			String token = jwtService.generateToken(userProfileRequest.getEmail());
 	          return ResponseEntity.ok(token);
 		} catch (Exception e) {
