@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sportify.service.dtos.UserProfileRequest;
+import com.sportify.service.security.JwtService;
+import com.sportify.service.security.dtos.AuthResponse;
 import com.sportify.service.services.UserProfileClientService;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -19,13 +21,15 @@ import com.sportify.service.services.UserProfileClientService;
 public class UserProfileClientController {
 	@Autowired
 	private UserProfileClientService userProfileClientService;
-
+    @Autowired
+    private JwtService jwtService;
 	@PostMapping("/save")
 	public ResponseEntity<String> saveUserProfile(@RequestBody UserProfileRequest userProfileRequest) {
 
 		try {
 			userProfileClientService.saveUserProfileWithSports(userProfileRequest);
-			return ResponseEntity.ok("Thêm thành công!!");
+			String token = jwtService.generateToken(userProfileRequest.getEmail());
+	          return ResponseEntity.ok(token);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());

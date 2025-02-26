@@ -1,5 +1,9 @@
 package com.sportify.service.services;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -8,7 +12,10 @@ import java.util.stream.Collectors;
 
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.sportify.service.dtos.UserProfileRequest;
 import com.sportify.service.entities.Address;
@@ -16,20 +23,22 @@ import com.sportify.service.entities.Gender;
 import com.sportify.service.entities.Sport;
 import com.sportify.service.entities.UserAccount;
 import com.sportify.service.entities.UserProfile;
+import com.sportify.service.enums.Role;
 import com.sportify.service.repositories.AddressClientRepository;
 import com.sportify.service.repositories.SportClientRepository;
 import com.sportify.service.repositories.UserAccountRepository;
 import com.sportify.service.repositories.UserProfileRepository;
-
+import com.sportify.service.security.JwtService;
+import com.sportify.service.security.dtos.AuthResponse;
 
 import jakarta.transaction.Transactional;
 
 @Service
 public class UserProfileClientService {
-
+	private static final String UPLOAD_DIR = "uploads/avatar/";
     @Autowired
     private UserProfileRepository userProfileRepository;
-
+ 
     @Autowired
     private SportClientRepository sportClientRepository;
 
@@ -45,7 +54,7 @@ public class UserProfileClientService {
     	            userProfileRequest.getEmail(), 
     	            userProfileRequest.getPassword()
     	        );
-
+    	  
         UserProfile userProfile = mapToUserProfile(userProfileRequest);
         userProfile.setUserAccount(userAccount);
         UserProfile savedUserProfile = userProfileRepository.save(userProfile);
@@ -76,6 +85,7 @@ public class UserProfileClientService {
         userProfile.setAvatar(userProfileRequest.getAvatar());
         userProfile.setBio(userProfileRequest.getBio());
         userProfile.setGender(userProfileRequest.getGender());
+        userProfile.setRole(Role.USER);
         return userProfile;
     }
     
@@ -94,6 +104,14 @@ public class UserProfileClientService {
                 .map(sportId -> sportClientRepository.findById(sportId)
                         .orElseThrow(() -> new IllegalArgumentException("Sport ID không hợp lệ: " + sportId)))
                 .collect(Collectors.toList());
+    }
+    
+    private String saveImage(MultipartFile image) throws IOException {
+        String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+        Path imagePath = Paths.get(UPLOAD_DIR, fileName);
+        Files.createDirectories(imagePath.getParent()); // Tạo thư mục nếu chưa có
+        Files.write(imagePath, image.getBytes());
+        return fileName;
     }
 }
 
