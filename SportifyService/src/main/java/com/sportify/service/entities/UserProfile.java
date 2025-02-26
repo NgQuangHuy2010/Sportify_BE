@@ -2,11 +2,10 @@ package com.sportify.service.entities;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.sportify.service.enums.Gender;
+import com.sportify.service.enums.Role;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -16,7 +15,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -66,6 +64,10 @@ public class UserProfile extends AbstractEntity {
 	@Enumerated(EnumType.STRING) 
 	@Column(name = "gender", nullable = true)
 	private Gender gender;
+
+	@Enumerated(EnumType.STRING) 
+	@Column(name = "role", nullable = false)
+	private Role role;
 
 	@OneToOne(mappedBy = "userProfile")
 	private Address address;
