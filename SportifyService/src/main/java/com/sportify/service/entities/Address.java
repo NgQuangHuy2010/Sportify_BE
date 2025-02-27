@@ -1,5 +1,7 @@
 package com.sportify.service.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -34,5 +36,6 @@ public class Address extends AbstractEntity {
 
 	@OneToOne()
 	@JoinColumn(name = "user_id")
+	@JsonBackReference
 	private UserProfile userProfile;
 }
