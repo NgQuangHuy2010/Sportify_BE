@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sportify.service.enums.Gender;
 import com.sportify.service.enums.Role;
 
@@ -70,6 +71,7 @@ public class UserProfile extends AbstractEntity {
 	private Role role;
 
 	@OneToOne(mappedBy = "userProfile")
+	@JsonManagedReference
 	private Address address;
 
 	@OneToOne(mappedBy = "userProfile")

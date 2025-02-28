@@ -2,10 +2,12 @@ package com.sportify.service.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +32,7 @@ import com.sportify.service.security.dtos.RegisterRequest;
 
 import lombok.RequiredArgsConstructor;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -44,13 +47,15 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.getUsernameOrEmail(), request.getPassword())
-        );
+//        authenticationManager.authenticate(
+//            new UsernamePasswordAuthenticationToken(request.getUsernameOrEmail(), request.getPassword())
+//        );
         UserAccount user = userAccountRepository.findByUsernameOrEmail(request.getUsernameOrEmail(), request.getUsernameOrEmail())
             .orElseThrow(() -> new RuntimeException("User not found"));
-        
-        String token = jwtService.generateToken(user.getUsername());
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
+        }
+        String token = jwtService.generateToken(user.getEmail());
         return ResponseEntity.ok(new AuthResponse(token));
     }
 
@@ -100,7 +105,6 @@ public class AuthController {
         return ResponseEntity.ok("User registered successfully!");
     }
 
- 
 }
 //
 //private String saveAvatar(MultipartFile avatarFile) {

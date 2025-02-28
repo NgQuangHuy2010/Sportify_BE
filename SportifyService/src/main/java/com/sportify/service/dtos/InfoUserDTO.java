@@ -2,22 +2,22 @@ package com.sportify.service.dtos;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sportify.service.entities.Address;
+import com.sportify.service.entities.Sport;
+import com.sportify.service.entities.UserProfile;
 import com.sportify.service.enums.Gender;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class UserProfileRequest {
+public class InfoUserDTO {
 	private String firstname;
 	private String lastname;
 	private String email;
-	private String password;
 	private Date birthday;
 	private String phone;
-    private MultipartFile avatar;
+	 private String avatar;
 	private String bio;
 	private Gender gender;
 	private List<Long> sports;
@@ -27,24 +27,8 @@ public class UserProfileRequest {
 		return firstname;
 	}
 
-	public Address getAddress() {
-		return address;
-	}
-
-	public void setAddress(Address address) {
-		this.address = address;
-	}
-
 	public void setFirstname(String firstname) {
 		this.firstname = firstname;
-	}
-
-	public Gender getGender() {
-		return gender;
-	}
-
-	public void setGender(Gender gender) {
-		this.gender = gender;
 	}
 
 	public String getLastname() {
@@ -63,6 +47,7 @@ public class UserProfileRequest {
 		this.email = email;
 	}
 
+
 	public Date getBirthday() {
 		return birthday;
 	}
@@ -79,15 +64,7 @@ public class UserProfileRequest {
 		this.phone = phone;
 	}
 
-
-
-	public MultipartFile getAvatar() {
-		return avatar;
-	}
-
-	public void setAvatar(MultipartFile avatar) {
-		this.avatar = avatar;
-	}
+	
 
 	public String getBio() {
 		return bio;
@@ -95,6 +72,14 @@ public class UserProfileRequest {
 
 	public void setBio(String bio) {
 		this.bio = bio;
+	}
+
+	public Gender getGender() {
+		return gender;
+	}
+
+	public void setGender(Gender gender) {
+		this.gender = gender;
 	}
 
 	public List<Long> getSports() {
@@ -105,12 +90,35 @@ public class UserProfileRequest {
 		this.sports = sports;
 	}
 
-	public String getPassword() {
-		return password;
+	public Address getAddress() {
+		return address;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setAddress(Address address) {
+		this.address = address;
 	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+	  public InfoUserDTO(UserProfile user) {
+	        this.firstname = user.getFirstname();
+	        this.lastname = user.getLastname();
+	        this.email = user.getEmail();
+	        this.avatar = user.getAvatar();
+	        this.birthday = new java.sql.Date(user.getBirthday().getTime());
+	        this.phone = user.getPhone();
+	        this.bio = user.getBio();
+	        this.gender = user.getGender();
+	        this.sports = user.getSports().stream()
+	                  .map(Sport::getId) // Lấy ID của từng Sport
+	                  .collect(Collectors.toList());
+
+	        this.address = user.getAddress();
+	    }
 
 }

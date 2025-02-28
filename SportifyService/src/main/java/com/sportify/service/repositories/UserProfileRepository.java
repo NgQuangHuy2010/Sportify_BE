@@ -8,4 +8,5 @@ import com.sportify.service.entities.UserProfile;
 
 public interface UserProfileRepository extends JpaRepository<UserProfile, Long> {
 	 Optional<UserProfile> findById(Long id);
+	 Optional<UserProfile> findByEmail(String email);
 }
