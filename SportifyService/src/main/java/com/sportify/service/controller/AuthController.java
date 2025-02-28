@@ -70,7 +70,11 @@ public class AuthController {
 //        userProfile.setAvatar(avatarPath);
 
         // Lấy danh sách Sport từ danh sách ID
+        System.out.println("Sport ID: " + request.getSportIds() );
         List<Sport> sports = sportRepository.findAllById(request.getSportIds());
+        System.out.println("Found sports: " + sports.size());
+//        userProfile.setSports(sports);
+        userProfile = userProfileRepository.save(userProfile);
         userProfile.setSports(sports);
 
         userProfileRepository.save(userProfile);
