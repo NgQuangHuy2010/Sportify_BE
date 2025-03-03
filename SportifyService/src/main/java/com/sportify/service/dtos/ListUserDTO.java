@@ -3,7 +3,7 @@ package com.sportify.service.dtos;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.sportify.service.entities.Sport;
+import com.sportify.service.dtos.admin.sport.SportList;
 import com.sportify.service.entities.UserProfile;
 
 import lombok.Getter;
@@ -29,7 +29,7 @@ public class ListUserDTO {
     private String city;
 
     // Danh sách môn thể thao
-    private List<String> sports;
+    private List<SportDTO> sports;
 
     public ListUserDTO(UserProfile userProfile) {
     	this.userId = userProfile.getId();
@@ -48,9 +48,15 @@ public class ListUserDTO {
             this.district = userProfile.getAddress().getDistrict();
             this.city = userProfile.getAddress().getCity();
         }
+        
 
-        this.sports = userProfile.getSports().stream()
-                .map(Sport::getSportName)
+        // Chuyển đổi danh sách môn thể thao
+        if (userProfile.getSports() != null) {
+            this.sports = userProfile.getSports().stream()
+                .map(sport -> new SportDTO(sport.getId(), sport.getSportName(), sport.getImage()))
                 .collect(Collectors.toList());
+        } else {
+            this.sports = List.of(); // Tránh NullPointerException
+        }
     }
 }
