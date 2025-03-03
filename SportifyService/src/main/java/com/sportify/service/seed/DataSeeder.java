@@ -62,7 +62,7 @@ public class DataSeeder implements CommandLineRunner {
             userProfile.setBio("This is a sample bio for User " + i);
             userProfile.setGender(Gender.MALE);
             userProfile.setRole(i == 1 ? Role.ADMIN : Role.USER);
-            userProfile.setAvatar("uploads/avatars/user" + i + ".png");
+            userProfile.setAvatar("user" + i + ".png");
 
             // Chọn ngẫu nhiên một số môn thể thao
             userProfile.setSports(sports.subList(0, (i % sports.size()) + 1));
