@@ -37,7 +37,7 @@ public class InfoUserController {
 			token = token.substring(7);
 		}
 
-		String email = jwtService.extractUsername(token);
+		String email = jwtService.extractEmail(token);
 		UserProfile user = userProfileRepository.findByEmail(email)
 				.orElseThrow(() -> new RuntimeException("User not found"));
 		InfoUserDTO userDTO = new InfoUserDTO(user);

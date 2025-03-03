@@ -37,7 +37,7 @@ public class JwtService {
     }
     
 
-    public String extractUsername(String token) {
+    public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -55,7 +55,7 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String email = extractUsername(token); // Lấy email từ token
+        final String email = extractEmail(token); // Lấy email từ token
         return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 

@@ -1,21 +1,25 @@
 package com.sportify.service.controller;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sportify.service.dtos.ListUserDTO;
 import com.sportify.service.dtos.UserProfileRequest;
+import com.sportify.service.entities.UserProfile;
 import com.sportify.service.security.JwtService;
-import com.sportify.service.security.dtos.AuthResponse;
 import com.sportify.service.services.UserProfileClientService;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -41,4 +45,14 @@ public class UserProfileClientController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
 		}
 	}
+	
+	@GetMapping("/get-all-user")
+    public ResponseEntity<List<ListUserDTO>> getUsersByCity(@RequestHeader("Authorization") String token) {
+        // Loại bỏ tiền tố "Bearer " trong token
+        String jwt = token.replace("Bearer ", "");
+        String email = jwtService.extractEmail(jwt);
+
+        List<ListUserDTO> users = userProfileClientService.getUsersByCity(email);
+        return ResponseEntity.ok(users);
+    }
 }
