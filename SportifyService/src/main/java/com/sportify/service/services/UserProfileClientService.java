@@ -15,11 +15,17 @@ import org.springframework.web.multipart.MultipartFile;
 import com.sportify.service.dtos.ListUserDTO;
 import com.sportify.service.dtos.UserProfileRequest;
 import com.sportify.service.entities.Address;
+
+import com.sportify.service.entities.ConnectSetting;
+import com.sportify.service.entities.Gender;
+
 import com.sportify.service.entities.Sport;
 import com.sportify.service.entities.UserAccount;
 import com.sportify.service.entities.UserProfile;
+import com.sportify.service.enums.ConnectionRequestStatus;
 import com.sportify.service.enums.Role;
 import com.sportify.service.repositories.AddressClientRepository;
+import com.sportify.service.repositories.ConnectSettingRepository;
 import com.sportify.service.repositories.SportClientRepository;
 import com.sportify.service.repositories.UserAccountRepository;
 import com.sportify.service.repositories.UserProfileRepository;
@@ -41,6 +47,9 @@ public class UserProfileClientService {
     private UserAccountRepository userAccountRepository;
     @Autowired
     private UserAccountService userAccountService;
+    @Autowired
+    private ConnectSettingRepository connectSettingRepository;
+    
     @Transactional
     public void saveUserProfileWithSports(UserProfileRequest userProfileRequest, MultipartFile avatar) throws IOException {
     	  UserAccount userAccount = userAccountService.registerUser(
@@ -69,6 +78,13 @@ public class UserProfileClientService {
             savedUserProfile.setAddress(address); 
             addressClientRepository.save(address);
         }
+        ConnectSetting connectSetting = new ConnectSetting();
+        connectSetting.setUserProfile(savedUserProfile);
+        connectSetting.setStatus(1); 
+        connectSetting.setGenderFind("2");
+        connectSettingRepository.save(connectSetting);
+        
+        
         userProfileRepository.save(savedUserProfile);  
     }
     

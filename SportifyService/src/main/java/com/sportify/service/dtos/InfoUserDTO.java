@@ -7,11 +7,13 @@ import java.util.stream.Collectors;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sportify.service.entities.Address;
+import com.sportify.service.entities.ConnectSetting;
 import com.sportify.service.entities.Sport;
 import com.sportify.service.entities.UserProfile;
 import com.sportify.service.enums.Gender;
 
 public class InfoUserDTO {
+	  private Long userId; 
 	private String firstname;
 	private String lastname;
 	private String email;
@@ -22,6 +24,15 @@ public class InfoUserDTO {
 	private Gender gender;
 	private List<Long> sports;
 	private Address address;
+	private ConnectSetting connectSetting;
+	
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
 
 	public String getFirstname() {
 		return firstname;
@@ -105,7 +116,19 @@ public class InfoUserDTO {
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
-	  public InfoUserDTO(UserProfile user) {
+	
+	  public ConnectSetting getConnectSetting() {
+		return connectSetting;
+	}
+
+	public void setConnectSetting(ConnectSetting connectSetting) {
+		this.connectSetting = connectSetting;
+	}
+
+	
+
+	public InfoUserDTO(UserProfile user) {
+		 this.userId = user.getId();
 	        this.firstname = user.getFirstname();
 	        this.lastname = user.getLastname();
 	        this.email = user.getEmail();
@@ -119,6 +142,7 @@ public class InfoUserDTO {
 	                  .collect(Collectors.toList());
 
 	        this.address = user.getAddress();
+	        this.connectSetting = user.getConnectSetting();
 	    }
 
 }
