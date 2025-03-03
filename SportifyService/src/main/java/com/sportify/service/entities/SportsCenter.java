@@ -31,6 +31,11 @@ public class SportsCenter extends AbstractEntity {
 
     @Column(name = "description")
     private String description;
+    
+
+    @Column(name = "image")
+    private String image;
+
 
     @OneToMany(mappedBy = "sportsCenter", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SportsField> sportsFields = new ArrayList<>();

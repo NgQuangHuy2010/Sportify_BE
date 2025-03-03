@@ -5,22 +5,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.sportify.service.dtos.ListUserDTO;
 import com.sportify.service.dtos.UserProfileRequest;
 import com.sportify.service.entities.Address;
+
 import com.sportify.service.entities.ConnectSetting;
 import com.sportify.service.entities.Gender;
+
 import com.sportify.service.entities.Sport;
 import com.sportify.service.entities.UserAccount;
 import com.sportify.service.entities.UserProfile;
@@ -31,8 +29,6 @@ import com.sportify.service.repositories.ConnectSettingRepository;
 import com.sportify.service.repositories.SportClientRepository;
 import com.sportify.service.repositories.UserAccountRepository;
 import com.sportify.service.repositories.UserProfileRepository;
-import com.sportify.service.security.JwtService;
-import com.sportify.service.security.dtos.AuthResponse;
 
 import jakarta.transaction.Transactional;
 
@@ -129,6 +125,22 @@ public class UserProfileClientService {
         Files.write(imagePath, image.getBytes());
         return fileName;
     }
+    
+    public List<ListUserDTO> getUsersByCity(String email) {
+        UserAccount userAccount = userAccountRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        UserProfile userProfile = userAccount.getUserProfile();
+        if (userProfile.getAddress() == null) {
+            throw new RuntimeException("User does not have an address");
+        }
+        String city = userProfile.getAddress().getCity();
+        
+        List<UserProfile> users =  userProfileRepository.findUsersByCity(city, userProfile.getId());
+        return users.stream().map(ListUserDTO::new).collect(Collectors.toList());
+    }
+    
+    
 }
 
 

@@ -50,10 +50,10 @@ public class Message extends AbstractEntity {
 //    private MessageType messageType;
 
     @Column(name = "sent_at")
-    private LocalDateTime sentAt;
+    private LocalDateTime sentAt = LocalDateTime.now();
 
     @Column(name = "is_deleted")
-    private boolean isDeleted;
+    private boolean isDeleted = false;
     
 
 
