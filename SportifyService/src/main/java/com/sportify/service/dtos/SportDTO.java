@@ -17,4 +17,8 @@ public class SportDTO {
         this.sportName = sportName;
         this.imageUrl = image; // Đường dẫn đầy đủ
     }
+	public SportDTO(String sportName, String image) {
+        this.sportName = sportName;
+        this.imageUrl = image; // Đường dẫn đầy đủ
+    }
 }

@@ -31,7 +31,9 @@ public abstract class AbstractEntity implements Serializable {
     
     @PrePersist
     protected void onCreate() {
-        this.createdOn = LocalDateTime.now();
+    	if (this.createdOn == null) { // Chỉ gán nếu chưa có giá trị
+            this.createdOn = LocalDateTime.now();
+        }
         this.updatedOn = LocalDateTime.now();
     }
 
