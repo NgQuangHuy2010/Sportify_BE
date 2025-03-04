@@ -17,7 +17,15 @@ public class UserProfileService {
 	private UserProfileRepository profileRepository;
 	
 	public List<UserProfile> getRecommendUsersToConnect(){
-		return profileRepository.findAll();  // Vi du thoi, khong phai code that
+		return profileRepository.findAll();  // For example
+	}
+	
+	public UserProfile addUserProfile (UserProfile userProfile) {
+		if (userProfile != null) {
+			profileRepository.save(userProfile);
+			return userProfile;
+		}
+		return null;
 	}
 
 }
