@@ -1,5 +1,8 @@
 package com.sportify.service.dtos.admin;
 
+import java.time.LocalTime;
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
 import com.sportify.service.dtos.admin.sport.CreateSportsFieldDTO;
@@ -101,7 +104,12 @@ public class AdminMapper {
                 sportsField.getSize(),
                 sportsField.getPricePerHour(),
                 sportsField.getIsAvailable(),
-                sportsField.getSportsCenter().getId()
+                sportsField.getSportsCenter().getId(),
+                sportsField.getMaxPlayers(),
+                Optional.ofNullable(sportsField.getEndTime()).map(LocalTime::toString).orElse("20:30"), 
+                Optional.ofNullable(sportsField.getStartTime()).map(LocalTime::toString).orElse("19:00"),
+                sportsField.getSubPlayers(),
+                sportsField.getDate()
         );
     }
 
@@ -130,7 +138,9 @@ public class AdminMapper {
                 sportsCenter.getId(),
                 sportsCenter.getName(),
                 sportsCenter.getLocation(),
-                sportsCenter.getDescription()
+                sportsCenter.getDescription(),
+                sportsCenter.getImage(),
+                sportsCenter.getOpen_door()
         );
     }
 

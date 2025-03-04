@@ -14,4 +14,6 @@ public class SportsCenterDTO {
 	private String name;
 	private String location;
 	private String description;
+	private String image;
+	 private String open_door;
 }
