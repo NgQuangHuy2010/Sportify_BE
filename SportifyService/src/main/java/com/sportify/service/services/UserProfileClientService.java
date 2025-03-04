@@ -17,7 +17,6 @@ import com.sportify.service.dtos.UserProfileRequest;
 import com.sportify.service.entities.Address;
 
 import com.sportify.service.entities.ConnectSetting;
-import com.sportify.service.entities.Gender;
 
 import com.sportify.service.entities.Sport;
 import com.sportify.service.entities.UserAccount;
