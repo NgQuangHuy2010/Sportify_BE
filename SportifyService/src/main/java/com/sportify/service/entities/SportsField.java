@@ -42,25 +42,13 @@ public class SportsField extends AbstractEntity {
     @Column(name = "is_available")
     private Boolean isAvailable = true;
 
-    @Column(name = "max_players", nullable = true)
-    private Integer maxPlayers; // Số người chơi tối đa
-
-    @Column(name = "sub_players", nullable = true)
-    private Integer subPlayers; // Số người dự bị
-    
-    @Column(name = "start_time", nullable = true)
-    private LocalTime startTime; // Giờ bắt đầu mặc định
-
-    @Column(name = "end_time", nullable = true)
-    private LocalTime endTime; // Giờ kết thúc mặc định
-    @Column(name = "date", nullable = true)
-    private Date date; // Giờ kết thúc mặc định
-    
     @ManyToOne
     @JoinColumn(name = "sports_center_id", nullable = false)
     private SportsCenter sportsCenter;
     
     @OneToMany(mappedBy = "sportsField", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Booking> bookings = new ArrayList<>();
+    
+    
 }
 

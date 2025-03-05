@@ -104,12 +104,8 @@ public class AdminMapper {
                 sportsField.getSize(),
                 sportsField.getPricePerHour(),
                 sportsField.getIsAvailable(),
-                sportsField.getSportsCenter().getId(),
-                sportsField.getMaxPlayers(),
-                Optional.ofNullable(sportsField.getEndTime()).map(LocalTime::toString).orElse("20:30"), 
-                Optional.ofNullable(sportsField.getStartTime()).map(LocalTime::toString).orElse("19:00"),
-                sportsField.getSubPlayers(),
-                sportsField.getDate()
+                sportsField.getSportsCenter().getId()
+            
         );
     }
 

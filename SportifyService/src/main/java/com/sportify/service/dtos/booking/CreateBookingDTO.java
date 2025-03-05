@@ -17,4 +17,5 @@ public class CreateBookingDTO {
     private String startTime;  // Định dạng HH:mm
     private String endTime;    // Định dạng HH:mm
     private String notes;
+    private Long timeSlotId;
 }
