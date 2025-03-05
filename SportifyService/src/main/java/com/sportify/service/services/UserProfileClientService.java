@@ -139,6 +139,14 @@ public class UserProfileClientService {
         return users.stream().map(ListUserDTO::new).collect(Collectors.toList());
     }
     
+    public UserProfile findUserByEmail(String email) {
+        UserAccount userAccount = userAccountRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        UserProfile userProfile = userAccount.getUserProfile();
+        return userProfile;
+    }
+    
     
 }
 
