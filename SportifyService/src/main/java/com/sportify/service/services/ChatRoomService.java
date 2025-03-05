@@ -1,5 +1,7 @@
 package com.sportify.service.services;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.sportify.service.dtos.ChatRoomDTO;
 import com.sportify.service.entities.ChatRoom;
+import com.sportify.service.entities.Message;
 import com.sportify.service.entities.UserProfile;
 import com.sportify.service.repositories.ChatRoomRepository;
 import com.sportify.service.repositories.UserProfileRepository;
@@ -36,11 +39,34 @@ public class ChatRoomService {
                     return chatRoomRepository.save(newRoom);
                 });
     }
-
     public List<ChatRoomDTO> getUserChatRooms(Long userId) {
-        UserProfile user = userProfileRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        List<ChatRoom> chatrooms =  chatRoomRepository.findAllByUser(user);
-        return chatrooms.stream().map(ChatRoomDTO::new).collect(Collectors.toList());
+        List<ChatRoom> chatRooms = chatRoomRepository.findByUser1IdOrUser2Id(userId, userId);
+
+        return chatRooms.stream()
+            .map(chatRoom -> {
+                UserProfile otherUser = chatRoom.getUser1().getId().equals(userId) 
+                    ? chatRoom.getUser2() 
+                    : chatRoom.getUser1();
+
+                Message lastMsg = chatRoom.getMessages().isEmpty() 
+                    ? null 
+                    : chatRoom.getMessages().get(chatRoom.getMessages().size() - 1);
+
+                String lastMessage = (lastMsg != null) ? lastMsg.getContent() : "";
+                LocalDateTime lastMessageTime = (lastMsg != null) ? lastMsg.getSentAt() : null;
+
+                return new ChatRoomDTO(
+                    chatRoom.getId(), 
+                    chatRoom.getUser1().getId(), 
+                    chatRoom.getUser2().getId(), 
+                    lastMessage, 
+                    lastMessageTime, 
+                    otherUser.getLastname(), 
+                    otherUser.getAvatar()
+                );
+            })
+            .sorted(Comparator.comparing(ChatRoomDTO::getLastMessageTime, Comparator.nullsLast(Comparator.reverseOrder()))) // Sắp xếp giảm dần theo thời gian
+            .collect(Collectors.toList());
     }
+
 }
