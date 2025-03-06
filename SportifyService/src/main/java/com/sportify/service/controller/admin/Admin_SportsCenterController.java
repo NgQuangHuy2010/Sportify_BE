@@ -1,6 +1,7 @@
 package com.sportify.service.controller.admin;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,8 +24,9 @@ public class Admin_SportsCenterController {
 	    private Admin_SportsCenterService sportsCenterService;
 
 	    @GetMapping
-	    public ResponseEntity<List<SportsCenterDTO>> getAllSportsCenters() {
-	        return ResponseEntity.ok(sportsCenterService.getAllSportsCenters());
+	    public ResponseEntity<List<Map<String, Object>>> getAllSportsCenters() {
+	        List<Map<String, Object>> response = sportsCenterService.getAllSportsCenters();
+	        return ResponseEntity.ok(response);
 	    }
 
 	    @PostMapping

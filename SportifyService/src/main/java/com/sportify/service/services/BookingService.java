@@ -54,26 +54,17 @@ public class BookingService {
 		TimeSlotSport timeSlotSport = timeSlotSportRepository.findById(bookingDTO.getTimeSlotId())
 				.orElseThrow(() -> new RuntimeException("Time slot not found"));
 
-		// Chuyển String "09:00" thành LocalTime
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-		LocalTime startTime = LocalTime.parse(bookingDTO.getStartTime(), formatter);
-		LocalTime endTime = LocalTime.parse(bookingDTO.getEndTime(), formatter);
+		
 
-		// Kiểm tra giờ có bị trùng không
-		boolean isOverlapping = bookingRepository.existsOverlappingBooking(bookingDTO.getSportFieldId(),
-				bookingDTO.getBookingDate(), startTime, endTime);
-
-		if (isOverlapping) {
-			throw new RuntimeException("The selected time slot is not available.");
-		}
+		
 
 		// Nếu giờ trống, tiếp tục tạo booking
 		Booking booking = new Booking();
 		booking.setUser(user);
 		booking.setSportsField(sportField);
 		booking.setBookingDate(bookingDTO.getBookingDate());
-		booking.setStartTime(startTime);
-		booking.setEndTime(endTime);
+		booking.setStartTime(LocalTime.parse(bookingDTO.getStartTime()));
+		booking.setEndTime(LocalTime.parse(bookingDTO.getEndTime()));
 		booking.setStatus(BookingStatus.PENDING);
 		booking.setNotes(bookingDTO.getNotes());
 		booking.setTimeSlotSport(timeSlotSport);
@@ -81,9 +72,6 @@ public class BookingService {
 
 		return new BookingDTO(booking);
 	}
-	
-	
-	
 	
 	
 	public Map<String, Object> getBookingInfo(Long sportFieldId, Long timeSlotId, LocalDate bookingDate) {
@@ -113,7 +101,13 @@ public class BookingService {
 	
 	
 	
-	
+	public void deleteBookingByTimeSlotAndUser(Long timeSlotId, Long userId) {
+	    Booking booking = bookingRepository.findByTimeSlotSportIdAndUserId(timeSlotId, userId)
+	            .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+	    bookingRepository.delete(booking);
+	}
+
 	
 	
 }
