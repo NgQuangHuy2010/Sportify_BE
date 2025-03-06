@@ -2,6 +2,7 @@ package com.sportify.service.controller;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -43,4 +44,19 @@ public class BookingController {
         BookingDTO createdBooking = bookingService.createBooking(bookingDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBooking);
     }
+    
+    
+    @GetMapping("/info")
+    public ResponseEntity<Map<String, Object>> getBookingInfo(
+            @RequestParam(name = "sportFieldId") Long sportFieldId,
+            @RequestParam(name = "timeSlotId") Long timeSlotId,
+            @RequestParam(name = "bookingDate") String bookingDate) {
+
+        LocalDate date = LocalDate.parse(bookingDate);
+        Map<String, Object> response = bookingService.getBookingInfo(sportFieldId, timeSlotId, date);
+
+        return ResponseEntity.ok(response);
+    }
+
+    
 }

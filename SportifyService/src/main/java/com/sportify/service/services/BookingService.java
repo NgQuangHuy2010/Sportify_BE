@@ -3,7 +3,9 @@ package com.sportify.service.services;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,4 +81,39 @@ public class BookingService {
 
 		return new BookingDTO(booking);
 	}
+	
+	
+	
+	
+	
+	public Map<String, Object> getBookingInfo(Long sportFieldId, Long timeSlotId, LocalDate bookingDate) {
+        // Đếm số người đã đặt
+        int bookedPlayers = bookingRepository.countBookings(sportFieldId, timeSlotId, bookingDate);
+
+        // Lấy danh sách user đã đặt
+        List<Long> bookedUsers = bookingRepository.getBookedUsers(sportFieldId, timeSlotId, bookingDate);
+
+        // Lấy maxPlayers từ timeSlot
+        int maxPlayers = timeSlotSportRepository.findMaxPlayers(timeSlotId);
+
+        // Tính số chỗ còn lại
+        int availableSlots = maxPlayers - bookedPlayers;
+
+        // Trả về kết quả
+        Map<String, Object> result = new HashMap<>();
+        result.put("bookedPlayers", bookedPlayers);
+        result.put("bookedUsers", bookedUsers);
+        result.put("maxPlayers", maxPlayers);
+        result.put("availableSlots", availableSlots);
+
+        return result;
+    }
+	
+	
+	
+	
+	
+	
+	
+	
 }
