@@ -15,7 +15,10 @@ import com.sportify.service.entities.UserProfile;
 import com.sportify.service.repositories.ChatRoomRepository;
 import com.sportify.service.repositories.UserProfileRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class ChatRoomService {
 
     @Autowired
@@ -42,6 +45,17 @@ public class ChatRoomService {
     public List<ChatRoomDTO> getUserChatRooms(Long userId) {
         List<ChatRoom> chatRooms = chatRoomRepository.findByUser1IdOrUser2Id(userId, userId);
 
+//    	if (chatRooms == null) {
+//    	    System.out.println("❌ chatRooms null - Có thể xảy ra lỗi trong service.");
+//    	} else if (chatRooms.isEmpty()) {
+//    	    System.out.println("⚠️ chatRooms rỗng - Không tìm thấy phòng nào cho userId: " + userId);
+//    	} else {
+//    	    System.out.println("✅ Số phòng tìm thấy: " + chatRooms.size());
+//    	    for (ChatRoom room : chatRooms) {
+//    	        System.out.println("Phòng: " + room.getId() + " - ");
+//    	    }
+//    	}
+
         return chatRooms.stream()
             .map(chatRoom -> {
                 UserProfile otherUser = chatRoom.getUser1().getId().equals(userId) 
@@ -54,15 +68,17 @@ public class ChatRoomService {
 
                 String lastMessage = (lastMsg != null) ? lastMsg.getContent() : "";
                 LocalDateTime lastMessageTime = (lastMsg != null) ? lastMsg.getSentAt() : null;
+                boolean lastMessageIsRead = (lastMsg == null || lastMsg.isRead());
 
                 return new ChatRoomDTO(
                     chatRoom.getId(), 
                     chatRoom.getUser1().getId(), 
                     chatRoom.getUser2().getId(), 
+                    otherUser.getLastname(), 
+                    otherUser.getAvatar(),
                     lastMessage, 
                     lastMessageTime, 
-                    otherUser.getLastname(), 
-                    otherUser.getAvatar()
+                    lastMessageIsRead
                 );
             })
             .sorted(Comparator.comparing(ChatRoomDTO::getLastMessageTime, Comparator.nullsLast(Comparator.reverseOrder()))) // Sắp xếp giảm dần theo thời gian

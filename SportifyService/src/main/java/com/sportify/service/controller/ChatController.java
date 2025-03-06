@@ -1,5 +1,6 @@
 package com.sportify.service.controller;
 
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -11,6 +12,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import com.sportify.service.dtos.ChatMessageDTO;
+import com.sportify.service.dtos.ChatRoomDTO;
 import com.sportify.service.entities.Message;
 import com.sportify.service.services.ChatRoomService;
 import com.sportify.service.services.MessageService;
@@ -38,15 +40,25 @@ public class ChatController {
                 message.getContent(),
                 message.getSentAt()
             );
-        System.out.println("Message sent to topic: " + message.getContent());
+        System.out.println("Message sent to topic: " + message.getSender().getLastname() + " - " + message.getContent());
         Long receiverId = message.getChatRoom().getUser1().getId().equals(message.getSender().getId()) ? message.getChatRoom().getUser2().getId() : message.getChatRoom().getUser1().getId();
+
+        System.out.println("senderId: " + message.getSender().getId());
+        System.out.println("ReceverId: " + receiverId);
+        
+    	List<ChatRoomDTO> chatRooms = chatRoomService.getUserChatRooms(message.getSender().getId());
+
         // Trì hoãn việc gửi danh sách chatrooms 500ms để tránh lỗi WebSocket
         Executors.newSingleThreadScheduledExecutor().schedule(() -> {
-            messagingTemplate.convertAndSend("/topic/chatrooms/" + message.getSender().getId(), 
-                                             chatRoomService.getUserChatRooms(message.getSender().getId()));
-            messagingTemplate.convertAndSend("/topic/chatrooms/" + receiverId, 
-                                             chatRoomService.getUserChatRooms(receiverId));
+        	
+            messagingTemplate.convertAndSend("/topic/chatrooms/" + message.getSender().getId(), chatRoomService.getUserChatRooms(message.getSender().getId())
+                                            );
+
+            System.out.println("Gửi danh sách phòng chat cho người nhận: " + receiverId);
+            messagingTemplate.convertAndSend("/topic/chatrooms/" + receiverId,  chatRoomService.getUserChatRooms(receiverId));
+            
         }, 500, TimeUnit.MILLISECONDS);
         return response;
     }
+    
 }
