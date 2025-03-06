@@ -19,10 +19,11 @@ public class ChatRoomDTO {
 	 private Long roomId;
 	    private Long user1Id;
 	    private Long user2Id;
-	    private String lastMessage;
-	    private LocalDateTime lastMessageTime;
 	    private String otherUserName;
 	    private String otherUserAvatar;
+	    private String lastMessage;
+	    private LocalDateTime lastMessageTime;
+	    private boolean lastMessageIsRead; // 🆕 Xác định tin nhắn cuối có chưa đọc không
 
     
     public boolean isParticipant(Long userId) {
@@ -39,7 +40,9 @@ public class ChatRoomDTO {
         	    .max(Comparator.comparing(Message::getSentAt));
         	Message lastMsg = lastMsgOpt.orElse(null);
         this.lastMessage = (lastMsg != null) ? lastMsg.getContent() : null;
-        this.lastMessageTime = (lastMsg != null) ? lastMsg.getSentAt() : null;
+        this.lastMessageTime = (lastMsg != null) ? lastMsg.getSentAt() : null; 
+     // Trạng thái đọc của tin nhắn cuối cùng
+        this.lastMessageIsRead = (lastMsg == null || lastMsg.isRead() || lastMsg.getSender().equals(currentUser));
 
         // Xác định user còn lại trong phòng chat
         UserProfile otherUser = chatRoom.getUser1().equals(currentUser) ? chatRoom.getUser2() : chatRoom.getUser1();

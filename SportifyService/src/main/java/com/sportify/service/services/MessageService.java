@@ -43,4 +43,14 @@ public class MessageService {
                 .orElseThrow(() -> new RuntimeException("Chat room not found"));
         return messageRepository.findByChatRoomOrderBySentAtAsc(chatRoom);
     }
+
+    // Cập nhật trạng thái đã đọc khi user mở phòng chat
+    public void markMessagesAsRead(Long userId, Long chatRoomId) {
+        messageRepository.markMessagesAsRead(userId, chatRoomId);
+    }
+
+    // Lấy số tin nhắn chưa đọc của user trong mỗi phòng chat
+    public long getUnreadMessageCount(Long userId, Long chatRoomId) {
+        return messageRepository.countUnreadMessages(userId, chatRoomId);
+    }
 }
