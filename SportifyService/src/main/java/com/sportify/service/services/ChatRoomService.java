@@ -68,7 +68,7 @@ public class ChatRoomService {
 
                 String lastMessage = (lastMsg != null) ? lastMsg.getContent() : "";
                 LocalDateTime lastMessageTime = (lastMsg != null) ? lastMsg.getSentAt() : null;
-                boolean lastMessageIsRead = (lastMsg == null || lastMsg.isRead());
+                boolean lastMessageIsRead = (lastMsg == null || lastMsg.isRead() || lastMsg.getSender().getId().equals(userId));
 
                 return new ChatRoomDTO(
                     chatRoom.getId(), 

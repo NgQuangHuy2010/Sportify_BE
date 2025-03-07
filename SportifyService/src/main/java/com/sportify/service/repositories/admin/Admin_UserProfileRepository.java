@@ -10,9 +10,16 @@ import org.springframework.data.repository.query.Param;
 
 import com.sportify.service.entities.UserProfile;
 public interface Admin_UserProfileRepository extends JpaRepository<UserProfile, Long> {
+	
+	@Query("SELECT u FROM UserProfile u WHERE u.role = 'USER'")
+	Page<UserProfile> findAllUsersWithRoleUser(Pageable pageable);
     
     @Query("SELECT u FROM UserProfile u JOIN u.sports s WHERE s.id = :sportId")
     Page<UserProfile> findUsersBySportId(@Param("sportId") Long sportId, Pageable pageable);
+    
+    @Query("SELECT u FROM UserProfile u WHERE (LOWER(u.firstname) LIKE LOWER(CONCAT('%', :name, '%')) " + 
+    	       "OR LOWER(u.lastname) LIKE LOWER(CONCAT('%', :name, '%'))) AND u.role = 'USER'")
+    	Page<UserProfile> searchUsersByName(@Param("name") String name, Pageable pageable);
 
     Page<UserProfile> findByFirstnameContainingIgnoreCaseOrLastnameContainingIgnoreCase(String firstname, String lastname, Pageable pageable);
 

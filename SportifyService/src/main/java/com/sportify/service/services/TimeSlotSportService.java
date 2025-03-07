@@ -29,7 +29,6 @@ public class TimeSlotSportService {
 
 	public TimeSlotSportDTO createTimeSlot( TimeSlotSportDTO dto) {
 		
-
 		  SportsField sportsField = sportsFieldRepository.findById(dto.getSportsFieldId())
 	                .orElseThrow(() -> new RuntimeException("Sports field not found"));
 		TimeSlotSport timeSlot = new TimeSlotSport();

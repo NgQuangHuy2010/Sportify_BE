@@ -55,6 +55,11 @@ public class AuthController {
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
         }
+        if (user.getUserProfile().getIsLocked() == true) {
+        	return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Your account has been locked. Please contact support.");
+
+        }
         String token = jwtService.generateToken(user.getEmail());
         return ResponseEntity.ok(new AuthResponse(token));
     }

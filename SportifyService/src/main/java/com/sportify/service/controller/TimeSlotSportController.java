@@ -8,15 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sportify.service.dtos.TimeSlotSportDTO;
-import com.sportify.service.dtos.admin.sport.SportsFieldDTO;
-import com.sportify.service.entities.TimeSlotSport;
 import com.sportify.service.services.TimeSlotSportService;
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
 @RequestMapping("/api/time-slots")
@@ -35,6 +32,6 @@ public class TimeSlotSportController {
 	  @GetMapping("/{sportsFieldId}")
 	  public ResponseEntity<List<TimeSlotSportDTO>> getTimeSlot(@PathVariable("sportsFieldId") Long sportsFieldId) {
 	      return ResponseEntity.ok(timeSlotService.getTimeSlotsByField(sportsFieldId));
-	  }
+	  } 
 
 }
