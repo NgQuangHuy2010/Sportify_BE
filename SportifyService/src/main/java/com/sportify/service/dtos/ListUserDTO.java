@@ -21,7 +21,7 @@ public class ListUserDTO {
     private String gender;
     private String role;
     private String avatar;
-
+    private String birthday;
     // Thông tin địa chỉ
     private String no;
     private String ward;
@@ -41,7 +41,7 @@ public class ListUserDTO {
         this.gender = userProfile.getGender().name();
         this.role = userProfile.getRole().name();
         this.avatar = userProfile.getAvatar();
-
+        this.birthday = userProfile.getBirthday().toString();
         if (userProfile.getAddress() != null) {
             this.no = userProfile.getAddress().getNo();
             this.ward = userProfile.getAddress().getWard();
