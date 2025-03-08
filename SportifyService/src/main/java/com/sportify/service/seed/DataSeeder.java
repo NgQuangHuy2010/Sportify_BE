@@ -89,80 +89,6 @@ public class DataSeeder implements CommandLineRunner {
     }
 
 
-//    private void seedUsers() {
-//        List<Sport> sports = sportRepository.findAll();
-//        Random random = new Random();
-//
-//        // Giới hạn thời gian từ 01/01/2024 đến hiện tại
-//        LocalDateTime start2024 = LocalDateTime.of(2024, 1, 1, 0, 0);
-//        LocalDateTime now = LocalDateTime.now();
-//        long daysBetween = ChronoUnit.DAYS.between(start2024, now);
-//
-//        // Giới hạn năm sinh từ 1970 đến 2005
-//        int minYear = 1970;
-//        int maxYear = 2005;
-//
-//        for (int i = 1; i <= 500; i++) {
-//            // Ngày tạo ngẫu nhiên từ 2024 đến hiện tại
-//            LocalDateTime randomCreatedOn = start2024.plusDays(random.nextInt((int) daysBetween + 1));
-//
-//            // Ngày sinh ngẫu nhiên từ 1970 đến 2005
-//            int randomYear = minYear + random.nextInt(maxYear - minYear + 1);
-//            int randomMonth = random.nextInt(12); // Tháng từ 0 đến 11
-//            int randomDay = random.nextInt(28) + 1; // Ngày từ 1 đến 28 (để tránh lỗi tháng ngắn)
-//
-//            Calendar calendar = Calendar.getInstance();
-//            calendar.set(randomYear, randomMonth, randomDay);
-//            Date randomBirthday = calendar.getTime();
-//
-//            // Tạo UserProfile
-//            UserProfile userProfile = new UserProfile();
-//            userProfile.setFirstname("User" + i);
-//            userProfile.setLastname("Test" + i);
-//            userProfile.setEmail("user" + i + "@gmail.com");
-//            userProfile.setPhone("098765432" + i);
-//            userProfile.setBio("This is a sample bio for User " + i);
-//            userProfile.setGender(Gender.MALE);
-//            userProfile.setRole(i == 1 ? Role.ADMIN : Role.USER);
-//            userProfile.setAvatar(i >= 11 ? "default_avatar.jpg" : "user" + i + ".jpg");
-//            userProfile.setSports(sports.subList(0, (i % sports.size()) + 1));
-//            userProfile.setBirthday(randomBirthday); // Gán ngày sinh ngẫu nhiên
-//            userProfile.setCreatedOn(randomCreatedOn);
-//            userProfile.setUpdatedOn(randomCreatedOn);
-//            userProfileRepository.save(userProfile);
-//
-//            // Tạo UserAccount
-//            UserAccount userAccount = new UserAccount();
-//            userAccount.setUsername("user" + i);
-//            userAccount.setEmail(userProfile.getEmail());
-//            userAccount.setPassword(passwordEncoder.encode("123456"));
-//            userAccount.setRegistrationMethod("email");
-//            userAccount.setUserProfile(userProfile);
-//            userAccount.setCreatedOn(randomCreatedOn);
-//            userAccount.setUpdatedOn(randomCreatedOn);
-//            userAccountRepository.save(userAccount);
-//
-//            // Tạo Address
-//            Address address = new Address();
-//            address.setWard("Ward " + (i % 10));
-//            address.setDistrict("District " + (i % 5));
-//            address.setCity(i % 2 == 0 ? "Hanoi" : "Ho Chi Minh");
-//            address.setNo("321 Street " + i);
-//            address.setUserProfile(userProfile);
-//            address.setCreatedOn(randomCreatedOn);
-//            address.setUpdatedOn(randomCreatedOn);
-//            addressRepository.save(address);
-//
-//            // Tạo ConnectSetting
-//            ConnectSetting con = new ConnectSetting();
-//            con.setStatus(0);
-//            con.setUserProfile(userProfile);
-//            con.setGenderFind("MALE");
-//            con.setCreatedOn(randomCreatedOn);
-//            con.setUpdatedOn(randomCreatedOn);
-//            connectRepository.save(con);
-//        }
-//    }
     
 
 private void seedUsers() {
@@ -246,45 +172,48 @@ private void createUser(int i, Role role, List<Sport> sports, LocalDateTime star
     connectRepository.save(con);
 }
     
+    
     private void seedConnections() {
-    	 List<UserProfile> users = userProfileRepository.findAll().stream()
-    	            .sorted(Comparator.comparing(UserProfile::getId))
-    	            .limit(10) // Lấy 10 user đầu tiên
-    	            .collect(Collectors.toList());
+        List<UserProfile> users = userProfileRepository.findAll().stream()
+                .sorted(Comparator.comparing(UserProfile::getId))
+                .skip(10) // Bỏ qua 10 user đầu tiên (admin)
+                .limit(20) // Lấy tiếp 20 user (từ 10 đến 29)
+                .collect(Collectors.toList());
 
-    	    if (users.size() < 10) {
-    	        throw new RuntimeException("Không đủ 10 user để tạo kết nối!");
-    	    }
+        if (users.size() < 20) {
+            throw new RuntimeException("Không đủ 20 user để tạo kết nối!");
+        }
 
-    	    List<UserProfile> senders = users.subList(0, 5);  // User 1 đến 5
-    	    List<UserProfile> receivers = users.subList(5, 10); // User 6 đến 10
+        List<UserProfile> senders = users.subList(0, 10);  // User 10 đến 19
+        List<UserProfile> receivers = users.subList(10, 20); // User 20 đến 29
 
-    	    for (UserProfile sender : senders) {
-    	        for (UserProfile receiver : receivers) {
-    	            // Kiểm tra xem đã có yêu cầu trước đó chưa
-    	            if (connectionRequestRepository.findBySenderAndReceiver(sender, receiver).isPresent()) {
-    	                continue;
-    	            }
+        for (UserProfile sender : senders) {
+            for (UserProfile receiver : receivers) {
+                // Kiểm tra xem đã có yêu cầu trước đó chưa
+                if (connectionRequestRepository.findBySenderAndReceiver(sender, receiver).isPresent()) {
+                    continue;
+                }
 
-    	            // Gửi yêu cầu kết bạn
-    	            ConnectionRequest request = new ConnectionRequest();
-    	            request.setSender(sender);
-    	            request.setReceiver(receiver);
-    	            request.setStatus(ConnectionRequestStatus.PENDING);
-    	            request.setSentAt(LocalDateTime.now());
-    	            connectionRequestRepository.save(request);
+                // Gửi yêu cầu kết bạn
+                ConnectionRequest request = new ConnectionRequest();
+                request.setSender(sender);
+                request.setReceiver(receiver);
+                request.setStatus(ConnectionRequestStatus.PENDING);
+                request.setSentAt(LocalDateTime.now());
+                connectionRequestRepository.save(request);
 
-    	            // Chấp nhận kết bạn
-    	            request.setStatus(ConnectionRequestStatus.ACCEPTED);
-    	            request.setRespondedAt(LocalDateTime.now());
-    	            connectionRequestRepository.save(request);
+                // Chấp nhận kết bạn
+                request.setStatus(ConnectionRequestStatus.ACCEPTED);
+                request.setRespondedAt(LocalDateTime.now());
+                connectionRequestRepository.save(request);
 
-    	            // Tạo ChatRoom
-    	            ChatRoom chatRoom = chatRoomService.getOrCreateChatRoom(sender.getId(), receiver.getId());
-    	            messageService.sendMessage(chatRoom.getId(), receiver.getId(), "We are friends now!");
-    	        }
-    	    }
+                // Tạo ChatRoom
+                ChatRoom chatRoom = chatRoomService.getOrCreateChatRoom(sender.getId(), receiver.getId());
+                messageService.sendMessage(chatRoom.getId(), receiver.getId(), "We are friends now!");
+            }
+        }
     }
+
 
 
 }
