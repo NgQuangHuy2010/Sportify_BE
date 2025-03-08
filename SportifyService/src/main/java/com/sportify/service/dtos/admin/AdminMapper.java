@@ -1,10 +1,11 @@
 package com.sportify.service.dtos.admin;
 
-import java.time.LocalTime;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import com.sportify.service.dtos.AddressClientDTO;
 import com.sportify.service.dtos.admin.sport.CreateSportsFieldDTO;
 import com.sportify.service.dtos.admin.sport.SportDetail;
 import com.sportify.service.dtos.admin.sport.SportList;
@@ -15,6 +16,7 @@ import com.sportify.service.dtos.admin.user.UserAccountDTO;
 import com.sportify.service.dtos.admin.user.UserDetailDTO;
 import com.sportify.service.dtos.admin.user.UserListDTO;
 import com.sportify.service.dtos.admin.user.UserUpdateDTO;
+import com.sportify.service.entities.Address;
 import com.sportify.service.entities.ConnectSetting;
 import com.sportify.service.entities.Sport;
 import com.sportify.service.entities.SportsCenter;
@@ -25,9 +27,9 @@ import com.sportify.service.entities.UserProfile;
 @Component
 public class AdminMapper {
 	// SPORT:
-//	public SportList SportToSportList(Sport sport) {
-//		return new SportList(sport.getId(), sport.getSportName(), sport.getImage());
-//	}
+	public SportList SportToSportList(Sport sport) {
+		return new SportList(sport.getId(), sport.getSportName(), sport.getImage());
+	}
 
 	public SportDetail SportToSportDetail(Sport sport, Long userCount) {
 		return new SportDetail(sport.getId(), sport.getSportName(), sport.getImage(), userCount, sport.getCreatedOn());
@@ -52,11 +54,21 @@ public class AdminMapper {
 				user.getBio(), 
 				user.getIsLocked(), 
 				UserAccountToUserAccountDto(user.getUserAccount()), 
-				ConnectSettingToConnectSettingDto(user.getConnectSetting()));
+				ConnectSettingToConnectSettingDto(user.getConnectSetting()),
+				addressToDto(user.getAddress()),
+				user.getSports() != null 
+	            ? user.getSports().stream()
+	                  .map(sport -> new SportList(sport.getId(), sport.getSportName(), sport.getImage()))
+	                  .collect(Collectors.toList())
+	            : new ArrayList<>());
 	}
 	
 	public UserAccountDTO UserAccountToUserAccountDto (UserAccount userAcc) {
 		return new UserAccountDTO(userAcc.getUsername(), userAcc.getPassword(), userAcc.getLastLogin(), userAcc.getRegistrationMethod());
+	}
+	
+	public AddressClientDTO addressToDto(Address address) {
+		return new AddressClientDTO(address.getWard(), address.getDistrict(), address.getCity(), address.getNo());
 	}
 	
 	public UserAccount UserAccountDtoToUserAccount (UserAccount entity, UserAccountDTO dto) {

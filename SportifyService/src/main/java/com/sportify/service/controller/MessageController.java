@@ -49,7 +49,7 @@ public class MessageController {
     }
     
 
-    @PutMapping("/mark-read/{chatRoomId}")
+    @PutMapping("/mark-read/{chatRoomId}") 
     public ResponseEntity<Void> markMessagesAsRead(@RequestHeader("Authorization") String token, 
                                                    @PathVariable("chatRoomId") Long chatRoomId) {
         String jwt = token.replace("Bearer ", "");
