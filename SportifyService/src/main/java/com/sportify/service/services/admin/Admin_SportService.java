@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,7 @@ import com.sportify.service.dtos.admin.sport.CreateSportDTO;
 import com.sportify.service.dtos.admin.sport.SportDetail;
 import com.sportify.service.dtos.admin.sport.SportList;
 import com.sportify.service.entities.Sport;
-import com.sportify.service.entities.UserProfile;
 import com.sportify.service.repositories.admin.Admin_SportRepository;
-import com.sportify.service.repositories.admin.Admin_UserProfileRepository;
-
-import jakarta.transaction.Transactional;
 
 @Service
 public class Admin_SportService {
@@ -29,8 +26,6 @@ public class Admin_SportService {
 	private AdminMapper adminMapper;
 	@Autowired
     private Admin_SportRepository sportRepository;
-	@Autowired
-    private Admin_UserProfileRepository userProfileRepository;
 	@Autowired
 	private Admin_UserProfileService userService;
 	
@@ -74,23 +69,6 @@ public class Admin_SportService {
         Sport savedSport = sportRepository.save(sport);
         return savedSport;
     }
-    
-    public SportList updateSport(Long id, CreateSportDTO dto) throws IOException {
-        Sport sport = sportRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Sport not found with ID: " + id));
-
-        // Cập nhật tên môn thể thao
-        sport.setSportName(dto.getSportName());
-
-        // Nếu có ảnh mới, lưu ảnh và cập nhật đường dẫn
-        if (dto.getImage() != null && !dto.getImage().isEmpty()) {
-            String fileName = saveImage(dto.getImage()); // Dùng lại hàm lưu ảnh
-            sport.setImage(fileName);
-        }
-        Sport savedSport = sportRepository.save(sport);
-        return new SportList(savedSport.getId(), savedSport.getSportName(), savedSport.getImage());
-    }
-
 
     private String saveImage(MultipartFile image) throws IOException {
         String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
@@ -100,17 +78,6 @@ public class Admin_SportService {
         return fileName;
     }
     
-    @Transactional
-    public void deleteSport(Long id) {
-        Sport sport = sportRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Sport not found with ID: " + id));
-
-        // Xóa quan hệ trong bảng trung gian trước
-        userProfileRepository.removeSportFromUsersNative(id);
-
-        // Xóa môn thể thao
-        sportRepository.delete(sport);
-    }
     
     
     

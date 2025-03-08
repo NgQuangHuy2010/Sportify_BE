@@ -2,11 +2,8 @@ package com.sportify.service.dtos.admin.user;
 
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
 
-import com.sportify.service.dtos.AddressClientDTO;
 import com.sportify.service.dtos.admin.ConnectSettingDTO;
-import com.sportify.service.dtos.admin.sport.SportList;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,7 +25,5 @@ public class UserDetailDTO {
 	private boolean isLocked;
 	private UserAccountDTO userAccount;
 	private ConnectSettingDTO connectSetting;
-	private AddressClientDTO address;
-	private List<SportList> sports;
 
 }

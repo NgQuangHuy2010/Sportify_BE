@@ -8,18 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sportify.service.dtos.ChatMessageDTO;
 import com.sportify.service.entities.Message;
-import com.sportify.service.entities.UserProfile;
-import com.sportify.service.security.JwtService;
 import com.sportify.service.services.MessageService;
-import com.sportify.service.services.UserProfileClientService;
 
 @RestController
 @RequestMapping("/api/messages")
@@ -27,11 +22,6 @@ public class MessageController {
 
     @Autowired
     private MessageService messageService;
-    @Autowired
-    private UserProfileClientService userProfileClientService;
-    
-    @Autowired
-    private JwtService jwtService;
 
     @PostMapping("/send")
     public ResponseEntity<Message> sendMessage(@RequestParam Long chatRoomId, 
@@ -46,17 +36,5 @@ public class MessageController {
         List<Message> messages = messageService.getChatHistory(chatRoomId);
         List<ChatMessageDTO> chatMesDto = messages.stream().map(ChatMessageDTO::new).collect(Collectors.toList()); 
         return ResponseEntity.ok(chatMesDto);
-    }
-    
-
-    @PutMapping("/mark-read/{chatRoomId}") 
-    public ResponseEntity<Void> markMessagesAsRead(@RequestHeader("Authorization") String token, 
-                                                   @PathVariable("chatRoomId") Long chatRoomId) {
-        String jwt = token.replace("Bearer ", "");
-        String email = jwtService.extractEmail(jwt);
-        UserProfile user = userProfileClientService.findUserByEmail(email);
-        
-        messageService.markMessagesAsRead(chatRoomId, user.getId());
-        return ResponseEntity.ok().build();
     }
 }

@@ -15,7 +15,6 @@ import com.sportify.service.entities.UserProfile;
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     
     Optional<ChatRoom> findByUser1AndUser2(UserProfile user1, UserProfile user2);
-    List<ChatRoom> findByUser1IdOrUser2Id(Long user1Id, Long user2Id);
     
     @Query("SELECT c FROM ChatRoom c WHERE c.user1 = :user OR c.user2 = :user")
     List<ChatRoom> findAllByUser(@Param("user") UserProfile user);

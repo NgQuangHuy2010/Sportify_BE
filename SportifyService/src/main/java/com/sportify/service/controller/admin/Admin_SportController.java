@@ -10,11 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,24 +55,6 @@ public class Admin_SportController {
         Sport createdSport = sportService.createSport(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdSport);
     }
-    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<SportList> updateSport(
-            @PathVariable("id") Long id,
-            @RequestPart("sportName") String sportName,
-            @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
-
-        CreateSportDTO dto = new CreateSportDTO();
-        dto.setSportName(sportName);
-        dto.setImage(image); 
-
-        SportList updatedSport = sportService.updateSport(id, dto);
-        return ResponseEntity.ok(updatedSport);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteSport(@PathVariable("id") Long id) {
-        sportService.deleteSport(id);
-        return ResponseEntity.ok("Sport deleted successfully");
-    }
+	
 
 }
