@@ -104,4 +104,20 @@ public class ConnectionRequestService {
         return connectedProfiles.stream().map(ListUserDTO::new).collect(Collectors.toList());
     }
     
+    public String cancelConnectionRequest(String token, Long receiverId) {
+       
+        String email = jwtService.extractEmail(token);
+        UserProfile sender = userProfileRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        UserProfile receiver = userProfileRepository.findById(receiverId)
+                .orElseThrow(() -> new RuntimeException("Receiver not found"));
+        var existingRequest = connectionRequestRepository.findBySenderAndReceiver(sender, receiver);
+        if (existingRequest.isEmpty()) {
+            return "No connection request found to cancel!";
+        }
+        connectionRequestRepository.delete(existingRequest.get());
+        return "Connection request has been canceled!";
+    }
+    
 }

@@ -2,6 +2,8 @@ package com.sportify.service.dtos.admin.sport;
 
 import java.util.List;
 
+import com.sportify.service.entities.SportsCenter;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,5 +17,5 @@ public class SportsCenterDTO {
 	private String location;
 	private String description;
 	private String image;
-	 private String open_door;
+	private String open_door;
 }
