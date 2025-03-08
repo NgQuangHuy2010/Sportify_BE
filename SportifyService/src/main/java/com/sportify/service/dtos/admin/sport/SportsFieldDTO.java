@@ -1,5 +1,7 @@
 package com.sportify.service.dtos.admin.sport;
 
+import java.sql.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,5 +17,6 @@ public class SportsFieldDTO {
     private Double pricePerHour;
     private Boolean isAvailable;
     private Long sportsCenterId;
+    
 }
 

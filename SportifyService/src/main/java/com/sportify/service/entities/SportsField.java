@@ -1,5 +1,7 @@
 package com.sportify.service.entities;
 
+import java.sql.Date;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,5 +48,7 @@ public class SportsField extends AbstractEntity {
     
     @OneToMany(mappedBy = "sportsField", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Booking> bookings = new ArrayList<>();
+    
+    
 }
 

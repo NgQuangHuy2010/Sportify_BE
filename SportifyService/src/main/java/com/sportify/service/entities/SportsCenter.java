@@ -32,6 +32,8 @@ public class SportsCenter extends AbstractEntity {
     @Column(name = "description")
     private String description;
     
+    @Column(name = "open_door",nullable = true)
+    private String open_door;
 
     @Column(name = "image")
     private String image;

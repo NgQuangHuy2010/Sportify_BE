@@ -22,7 +22,7 @@ public class BookingDTO {
     private LocalTime endTime;
     private BookingStatus status;
     private String notes;
-    
+    private Long timeSlotId;
     public BookingDTO(Booking booking) {
         this.id = booking.getId();
         this.userId = booking.getUser().getId();
@@ -32,5 +32,6 @@ public class BookingDTO {
         this.endTime = booking.getEndTime();
         this.status = booking.getStatus();
         this.notes = booking.getNotes();
+        this.userId = booking.getTimeSlotSport().getId();
     }
 }

@@ -27,9 +27,9 @@ public class Admin_UserProfileService {
 	        Page<UserProfile> userProfiles;
 	        
 	        if (keyword != null && !keyword.isEmpty()) {
-	            userProfiles = userRepository.findByFirstnameContainingIgnoreCaseOrLastnameContainingIgnoreCase(keyword, keyword, pageable);
+	            userProfiles = userRepository.searchUsersByName(keyword, pageable);
 	        } else {
-	            userProfiles = userRepository.findAll(pageable);
+	            userProfiles = userRepository.findAllUsersWithRoleUser(pageable);
 	        }
 	        
 	        return userProfiles.map(adminMapper::UserProfileToUserList);
