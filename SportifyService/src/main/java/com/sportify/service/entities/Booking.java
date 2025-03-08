@@ -50,8 +50,6 @@ public class Booking extends AbstractEntity {
     @Column(name = "notes")
     private String notes;
 
-    @ManyToOne
-    @JoinColumn(name = "time_slot_id", nullable = false)
-    private TimeSlotSport timeSlotSport;
+	
 
 }

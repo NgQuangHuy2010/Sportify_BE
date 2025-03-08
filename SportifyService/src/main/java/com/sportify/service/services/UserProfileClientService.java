@@ -135,16 +135,8 @@ public class UserProfileClientService {
         }
         String city = userProfile.getAddress().getCity();
         
-        List<UserProfile> users =  userProfileRepository.findUnconnectedUsersByCity(city, userProfile.getId());
+        List<UserProfile> users =  userProfileRepository.findUsersByCity(city, userProfile.getId());
         return users.stream().map(ListUserDTO::new).collect(Collectors.toList());
-    }
-    
-    public UserProfile findUserByEmail(String email) {
-        UserAccount userAccount = userAccountRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        
-        UserProfile userProfile = userAccount.getUserProfile();
-        return userProfile;
     }
     
     

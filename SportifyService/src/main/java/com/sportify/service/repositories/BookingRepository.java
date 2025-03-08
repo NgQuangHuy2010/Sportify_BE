@@ -32,20 +32,4 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
              @Param("sportsFieldId") Long sportsFieldId,
              @Param("bookingDate") LocalDate bookingDate
      );
-    
-    
-    
-    
-    @Query("SELECT COUNT(b) FROM Booking b WHERE b.sportsField.id = :sportFieldId AND b.timeSlotSport.id = :timeSlotId AND b.bookingDate = :bookingDate")
-    int countBookings(@Param("sportFieldId") Long sportFieldId, 
-                      @Param("timeSlotId") Long timeSlotId, 
-                      @Param("bookingDate") LocalDate bookingDate);
-
-
-    @Query("SELECT b.user.id FROM Booking b WHERE b.sportsField.id = :sportFieldId AND b.timeSlotSport.id = :timeSlotId AND b.bookingDate = :bookingDate")
-    List<Long> getBookedUsers(@Param("sportFieldId") Long sportFieldId, @Param("timeSlotId") Long timeSlotId, @Param("bookingDate") LocalDate bookingDate);
-
-
-    
-    
 }

@@ -55,9 +55,6 @@ public class Message extends AbstractEntity {
     @Column(name = "is_deleted")
     private boolean isDeleted = false;
     
-    @Column(name = "is_read")
-    private boolean isRead = false;
-    
 
 
 }
