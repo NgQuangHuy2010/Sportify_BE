@@ -37,9 +37,15 @@ public class ConnectionRequestService {
         UserProfile receiver = userProfileRepository.findById(receiverId)
                 .orElseThrow(() -> new RuntimeException("Receiver not found"));
 
-        if (connectionRequestRepository.findBySenderAndReceiver(sender, receiver).isPresent()) {
+        var existingRequest = connectionRequestRepository.findBySenderAndReceiver(sender, receiver);
+
+        // Nếu đã có request và trạng thái không phải DECLINED thì không cho gửi lại
+        if (existingRequest.isPresent() && existingRequest.get().getStatus() != ConnectionRequestStatus.DECLINED) {
             return "Connection request already sent!";
         }
+
+        // Nếu request tồn tại và bị từ chối, xóa request cũ trước khi tạo mới
+        existingRequest.ifPresent(connectionRequestRepository::delete);
 
         ConnectionRequest request = new ConnectionRequest();
         request.setSender(sender);
@@ -118,6 +124,16 @@ public class ConnectionRequestService {
         }
         connectionRequestRepository.delete(existingRequest.get());
         return "Connection request has been canceled!";
+    }
+    
+ // Lấy danh sách yêu cầu kết nối đã gửi nhưng chưa được chấp nhận
+    public List<ConnectionRequestDTO> getOutgoingRequests(String token) {
+        String email = jwtService.extractEmail(token);
+        UserProfile user = userProfileRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<ConnectionRequest> sentRequests = connectionRequestRepository.findBySenderAndStatus(user, ConnectionRequestStatus.PENDING);
+        return sentRequests.stream().map(ConnectionRequestDTO::new).collect(Collectors.toList());
     }
     
 }

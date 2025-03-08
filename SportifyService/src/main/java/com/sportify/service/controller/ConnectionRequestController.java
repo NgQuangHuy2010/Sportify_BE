@@ -62,6 +62,14 @@ public class ConnectionRequestController {
         String response = connectionRequestService.cancelConnectionRequest(token.replace("Bearer ", ""), receiverId);
         return ResponseEntity.ok().body(response);
     }
+    
+
+    @GetMapping("/outgoing")
+    public ResponseEntity<List<ConnectionRequestDTO>> getOutgoingRequests(
+            @RequestHeader("Authorization") String token) {
+        List<ConnectionRequestDTO> outgoingRequests = connectionRequestService.getOutgoingRequests(token.replace("Bearer ", ""));
+        return ResponseEntity.ok(outgoingRequests);
+    }
 
     
 }
