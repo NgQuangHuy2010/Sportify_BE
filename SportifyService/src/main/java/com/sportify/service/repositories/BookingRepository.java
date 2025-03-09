@@ -14,7 +14,7 @@ import com.sportify.service.dtos.booking.BookedTimeSlotDTO;
 import com.sportify.service.entities.Booking;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-
+	List<Booking> findByUserId(Long userId);
     @Query("SELECT COUNT(b) > 0 FROM Booking b " +
            "WHERE b.sportsField.id = :sportsFieldId " +
            "AND b.bookingDate = :bookingDate " +
@@ -69,7 +69,15 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     
     
     
-    
+    @Query("""
+    	    SELECT b FROM Booking b
+    	    JOIN FETCH b.user u
+    	    JOIN FETCH b.sportsField sf
+    	    JOIN FETCH b.timeSlotSport ts
+    	    WHERE u.id = :userId
+    	""")
+    	List<Booking> findByUserIdBooking(@Param("userId") Long userId);
+
     
     
     

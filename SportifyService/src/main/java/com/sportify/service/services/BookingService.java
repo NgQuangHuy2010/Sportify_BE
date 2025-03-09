@@ -6,10 +6,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sportify.service.dtos.BookingDto;
 import com.sportify.service.dtos.booking.BookedTimeSlotDTO;
 import com.sportify.service.dtos.booking.BookingDTO;
 import com.sportify.service.dtos.booking.CreateBookingDTO;
@@ -108,6 +110,26 @@ public class BookingService {
 	    bookingRepository.delete(booking);
 	}
 
-	
+	public List<BookingDto> getBookingsByUserId(Long userId) {
+	    return bookingRepository.findByUserId(userId).stream()
+	        .map(booking -> new BookingDto(
+	            booking.getId(),
+	            booking.getBookingDate(),
+	            booking.getStartTime(),
+	            booking.getEndTime(),
+	            booking.getNotes(),
+	            booking.getStatus(),
+	            booking.getUser().getId(),
+	            booking.getSportsField().getId(),
+	            booking.getSportsField().getName(),
+	            booking.getTimeSlotSport().getId(),
+	            booking.getTimeSlotSport().getStartTime() + " - " + booking.getTimeSlotSport().getEndTime(),
+	            booking.getSportsField().getSportsCenter().getName(),
+	            booking.getSportsField().getSportsCenter().getLocation()
+	        ))
+	        .collect(Collectors.toList());
+	}
+
+
 	
 }

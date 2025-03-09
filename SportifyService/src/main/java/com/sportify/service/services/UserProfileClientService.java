@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -134,8 +135,9 @@ public class UserProfileClientService {
             throw new RuntimeException("User does not have an address");
         }
         String city = userProfile.getAddress().getCity();
-        
-        List<UserProfile> users =  userProfileRepository.findUnconnectedUsersByCity(city, userProfile.getId());
+        String district = userProfile.getAddress().getDistrict();
+        List<UserProfile> users =  userProfileRepository.findUnconnectedUsersByCity(city,district, userProfile.getId());
+        Collections.shuffle(users);
         return users.stream().map(ListUserDTO::new).collect(Collectors.toList());
     }
     

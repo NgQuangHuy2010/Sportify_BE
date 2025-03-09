@@ -237,46 +237,44 @@ private void createUser(int i, Role role, List<Sport> sports, LocalDateTime star
     connectRepository.save(con);
 }
     
-    private void seedConnections() {
-    	 List<UserProfile> users = userProfileRepository.findAll().stream()
-    	            .sorted(Comparator.comparing(UserProfile::getId))
-    	            .limit(10) // Lấy 10 user đầu tiên
-    	            .collect(Collectors.toList());
+private void seedConnections() {
+    List<UserProfile> users = userProfileRepository.findAll().stream()
+            .sorted(Comparator.comparing(UserProfile::getId))
+            .skip(10) // Bỏ qua 10 user đầu tiên (admin)
+            .limit(20) // Lấy tiếp 20 user (từ 10 đến 29)
+            .collect(Collectors.toList());
 
-    	    if (users.size() < 10) {
-    	        throw new RuntimeException("Không đủ 10 user để tạo kết nối!");
-    	    }
+    if (users.size() < 20) {
+        throw new RuntimeException("Không đủ 20 user để tạo kết nối!");
+    }
 
-    	    List<UserProfile> senders = users.subList(0, 5);  // User 1 đến 5
-    	    List<UserProfile> receivers = users.subList(5, 10); // User 6 đến 10
+    List<UserProfile> senders = users.subList(0, 10);  // User 10 đến 19
+    List<UserProfile> receivers = users.subList(10, 20); // User 20 đến 29
 
-    	    for (UserProfile sender : senders) {
-    	        for (UserProfile receiver : receivers) {
-    	            // Kiểm tra xem đã có yêu cầu trước đó chưa
-    	            if (connectionRequestRepository.findBySenderAndReceiver(sender, receiver).isPresent()) {
-    	                continue;
-    	            }
+    for (UserProfile sender : senders) {
+        for (UserProfile receiver : receivers) {
+            // Kiểm tra xem đã có yêu cầu trước đó chưa
+            if (connectionRequestRepository.findBySenderAndReceiver(sender, receiver).isPresent()) {
+                continue;
+            }
 
-    	            // Gửi yêu cầu kết bạn
-    	            ConnectionRequest request = new ConnectionRequest();
-    	            request.setSender(sender);
-    	            request.setReceiver(receiver);
-    	            request.setStatus(ConnectionRequestStatus.PENDING);
-    	            request.setSentAt(LocalDateTime.now());
-    	            connectionRequestRepository.save(request);
+            // Gửi yêu cầu kết bạn
+            ConnectionRequest request = new ConnectionRequest();
+            request.setSender(sender);
+            request.setReceiver(receiver);
+            request.setStatus(ConnectionRequestStatus.PENDING);
+            request.setSentAt(LocalDateTime.now());
+            connectionRequestRepository.save(request);
 
-    	            // Chấp nhận kết bạn
-    	            request.setStatus(ConnectionRequestStatus.ACCEPTED);
-    	            request.setRespondedAt(LocalDateTime.now());
-    	            connectionRequestRepository.save(request);
+            // Chấp nhận kết bạn
+            request.setStatus(ConnectionRequestStatus.ACCEPTED);
+            request.setRespondedAt(LocalDateTime.now());
+            connectionRequestRepository.save(request);
 
-    	            // Tạo ChatRoom
-    	            ChatRoom chatRoom = chatRoomService.getOrCreateChatRoom(sender.getId(), receiver.getId());
-    	            messageService.sendMessage(chatRoom.getId(), receiver.getId(), "We are friends now!");
-    	        }
-    	    }
+            // Tạo ChatRoom
+            ChatRoom chatRoom = chatRoomService.getOrCreateChatRoom(sender.getId(), receiver.getId());
+            messageService.sendMessage(chatRoom.getId(), receiver.getId(), "We are friends now!");
+        }
     }
 }
-    //
-//
-//}
+}

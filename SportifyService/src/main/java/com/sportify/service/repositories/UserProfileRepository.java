@@ -19,7 +19,9 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
 	 @Query("""
 			    SELECT u FROM UserProfile u 
 			    WHERE u.address.city = :city 
+			    AND u.address.district = :district 
 			    AND u.id <> :userId 
+			    AND (u.connectSetting IS NULL OR u.connectSetting.status <> 0)
 			  AND u.id NOT IN (
 			        SELECT cr.sender.id FROM ConnectionRequest cr 
 			        WHERE cr.receiver.id = :userId AND cr.status IN ('PENDING', 'ACCEPTED')
@@ -29,6 +31,6 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
 			        WHERE cr.sender.id = :userId AND cr.status IN ('PENDING', 'ACCEPTED')
 			    )
 			""")
-			List<UserProfile> findUnconnectedUsersByCity(@Param("city") String city, @Param("userId") Long userId);
+			List<UserProfile> findUnconnectedUsersByCity(@Param("city") String city,@Param("district") String district, @Param("userId") Long userId);
 	 
 }
